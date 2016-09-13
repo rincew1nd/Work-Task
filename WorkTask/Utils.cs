@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TestTask.Exceptions;
 
 namespace WorkTask
 {
@@ -23,9 +24,16 @@ namespace WorkTask
 				.ToList();
 
 			if (sA[2] > sA[0] + sA[1])
-				throw new ArgumentException("Impossible triangle. One side larger then sum of others.");
+				throw new ImpossibleTriangleException("Impossible triangle. One side larger then sum of others.");
 
-			var halfArea = (a + b + c) / 2;
+			var angles = new double[3];
+			angles[0] = (Math.Pow(sA[0], 2) + Math.Pow(sA[1], 2) - Math.Pow(sA[2], 2)) / (2 * sA[0] * sA[1]);
+			angles[1] = (Math.Pow(sA[1], 2) + Math.Pow(sA[2], 2) - Math.Pow(sA[0], 2)) / (2 * sA[1] * sA[2]);
+			angles[2] = (Math.Pow(sA[2], 2) + Math.Pow(sA[0], 2) - Math.Pow(sA[1], 2)) / (2 * sA[2] * sA[0]);
+			if (!angles.Any(n => n == 0))
+				throw new RightTriangleException("Triangle is not right-angled.");
+			
+			var halfArea = (sA[0] + sA[1] + sA[2]) / 2;
 			return Math.Sqrt(halfArea * (halfArea - sA[0]) * (halfArea - sA[1]) * (halfArea - sA[2]));
 		}
     }
